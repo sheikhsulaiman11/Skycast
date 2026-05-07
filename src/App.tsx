@@ -1,14 +1,15 @@
 import SearchBar from './components/SearchBar'
+import useWeather from './hooks/useWeather'
 
 function App() {
-  function handleSearch(city: string) {
-    console.log('Searching for:', city)
-  }
+  const { data, loading, error, searchCity } = useWeather()
 
   return (
     <div>
       <h1>Skycast</h1>
-      <SearchBar onSearch={handleSearch} loading={false} />
+      <SearchBar onSearch={searchCity} loading={loading} />
+      {error && <p>{error}</p>}
+      {data && <p>Got data!</p>}
     </div>
   )
 }
