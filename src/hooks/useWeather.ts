@@ -1,28 +1,33 @@
-import { useState } from 'react'
-import type { WeatherData } from '../types/weather'
+import { useState, useCallback } from 'react'
 import { fetchWeatherByCity } from '../utils/api'
+import { type WeatherData } from '../types/weather'
 
-function useWeather() {
-  const [data, setData] = useState<WeatherData | null>(null)
+interface UseWeatherReturn {
+  weather: WeatherData | null
+  loading: boolean
+  error: string | null
+  search: (city: string) => Promise<void>
+}
+
+export function useWeather(): UseWeatherReturn {
+  const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function searchCity(city: string) {
+  const search = useCallback(async (city: string) => {
+    if (!city.trim()) return
     setLoading(true)
     setError(null)
-
     try {
-      const result = await fetchWeatherByCity(city)
-      console.log('API result:', result)
-      setData(result)
-    } catch (e) {
+      const data = await fetchWeatherByCity(city.trim())
+      setWeather(data)
+    } catch {
       setError('City not found. Try again.')
+      setWeather(null)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  return { data, loading, error, searchCity }
+  return { weather, loading, error, search }
 }
-
-export default useWeather
