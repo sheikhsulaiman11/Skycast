@@ -4,26 +4,34 @@ import SearchBar from './components/SearchBar'
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-white rounded-2xl p-4 border border-zinc-100 flex flex-col gap-1">
-      <span className="text-xs text-zinc-400 uppercase tracking-widest">{label}</span>
-      <span className="text-lg font-semibold text-zinc-800">{value}</span>
+    <div className="flex flex-col gap-1 px-4 py-3 rounded-2xl"
+      style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+      <span className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.45)' }}>{label}</span>
+      <span className="text-base font-semibold text-white">{value}</span>
     </div>
   )
 }
 
 function WeatherDisplay({ weather }: { weather: WeatherData }) {
+  const glass = {
+    background: 'rgba(255,255,255,0.08)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    border: '1px solid rgba(255,255,255,0.15)',
+  }
+
   return (
     <>
-      {/* Hero — current weather */}
-      <section className="bg-white rounded-3xl border border-zinc-100 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      {/* Hero */}
+      <section className="rounded-3xl p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6" style={glass}>
         <div>
-          <p className="text-sm text-zinc-400 mb-1">{weather.city}</p>
+          <p className="text-sm mb-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{weather.city}</p>
           <div className="flex items-end gap-3">
-            <span className="text-7xl font-light text-zinc-900 leading-none">{weather.temp}°</span>
+            <span className="text-8xl font-thin text-white leading-none">{weather.temp}°</span>
             <img src={weather.icon} alt={weather.condition} className="w-16 h-16 mb-1" />
           </div>
-          <p className="text-zinc-500 mt-2 text-sm">{weather.condition}</p>
-          <p className="text-zinc-400 text-xs mt-1">Feels like {weather.feels_like}°</p>
+          <p className="mt-2 text-sm text-white/70">{weather.condition}</p>
+          <p className="text-xs mt-1 text-white/40">Feels like {weather.feels_like}°</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3 w-full sm:w-auto sm:min-w-[260px]">
@@ -35,33 +43,31 @@ function WeatherDisplay({ weather }: { weather: WeatherData }) {
       </section>
 
       {/* Sun times */}
-      <section className="bg-white rounded-2xl border border-zinc-100 p-5 grid grid-cols-3 divide-x divide-zinc-100 text-center">
+      <section className="rounded-2xl p-5 grid grid-cols-3 text-center" style={glass}>
         {[
           { label: 'Sunrise', value: weather.sunrise },
           { label: 'Sunset', value: weather.sunset },
           { label: 'Daylight', value: weather.daylight },
-        ].map(item => (
-          <div key={item.label} className="px-4">
-            <p className="text-xs text-zinc-400 uppercase tracking-widest mb-1">{item.label}</p>
-            <p className="text-sm font-medium text-zinc-800">{item.value}</p>
+        ].map((item, i) => (
+          <div key={item.label} className={`px-4 ${i !== 2 ? 'border-r border-white/10' : ''}`}>
+            <p className="text-xs uppercase tracking-widest mb-1 text-white/40">{item.label}</p>
+            <p className="text-sm font-medium text-white">{item.value}</p>
           </div>
         ))}
       </section>
 
-      {/* Hourly forecast */}
+      {/* Hourly */}
       {weather.hourly.length > 0 && (
-        <section className="bg-white rounded-2xl border border-zinc-100 p-5">
-          <p className="text-xs text-zinc-400 uppercase tracking-widest mb-4">Hourly</p>
+        <section className="rounded-2xl p-5" style={glass}>
+          <p className="text-xs uppercase tracking-widest mb-4 text-white/40">Hourly</p>
           <div className="overflow-x-auto">
-            <div className="flex gap-4 min-w-max pb-1">
+            <div className="flex gap-5 min-w-max pb-1">
               {weather.hourly.map((h, i) => (
                 <div key={i} className="flex flex-col items-center gap-1.5 w-14">
-                  <span className="text-xs text-zinc-400">{h.time}</span>
+                  <span className="text-xs text-white/40">{h.time}</span>
                   <img src={h.icon} alt="" className="w-8 h-8" />
-                  <span className="text-sm font-medium text-zinc-800">{h.temp}°</span>
-                  {h.rain > 0 && (
-                    <span className="text-xs text-blue-400">{h.rain}%</span>
-                  )}
+                  <span className="text-sm font-medium text-white">{h.temp}°</span>
+                  {h.rain > 0 && <span className="text-xs text-blue-300">{h.rain}%</span>}
                 </div>
               ))}
             </div>
@@ -69,34 +75,31 @@ function WeatherDisplay({ weather }: { weather: WeatherData }) {
         </section>
       )}
 
-      {/* Weekly forecast */}
+      {/* Weekly */}
       {weather.weekly.length > 0 && (
-        <section className="bg-white rounded-2xl border border-zinc-100 p-5">
-          <p className="text-xs text-zinc-400 uppercase tracking-widest mb-4">7-Day Forecast</p>
+        <section className="rounded-2xl p-5" style={glass}>
+          <p className="text-xs uppercase tracking-widest mb-4 text-white/40">7-Day Forecast</p>
           <div className="space-y-1">
             {weather.weekly.map((day, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between py-2.5 border-b border-zinc-50 last:border-0"
-              >
-                <span className="text-sm text-zinc-500 w-10">{day.day}</span>
+              <div key={i} className="flex items-center justify-between py-2.5 border-b last:border-0 border-white/5">
+                <span className="text-sm text-white/60 w-10">{day.day}</span>
                 <img src={day.icon} alt="" className="w-7 h-7" />
                 {day.rain > 0
-                  ? <span className="text-xs text-blue-400 w-10 text-right">{day.rain}%</span>
-                  : <span className="w-10" />
-                }
+                  ? <span className="text-xs text-blue-300 w-10 text-right">{day.rain}%</span>
+                  : <span className="w-10" />}
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="text-zinc-400">{day.lo}°</span>
-                  <div className="w-20 h-1 rounded-full bg-zinc-100 overflow-hidden">
+                  <span className="text-white/40">{day.lo}°</span>
+                  <div className="w-20 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                     <div
-                      className="h-full rounded-full bg-zinc-400"
+                      className="h-full rounded-full"
                       style={{
                         marginLeft: `${((day.lo + 10) / 50) * 100}%`,
                         width: `${((day.hi - day.lo) / 50) * 100}%`,
+                        background: 'rgba(255,255,255,0.5)',
                       }}
                     />
                   </div>
-                  <span className="text-zinc-700 font-medium">{day.hi}°</span>
+                  <span className="text-white font-medium">{day.hi}°</span>
                 </div>
               </div>
             ))}
@@ -111,22 +114,22 @@ export default function App() {
   const { weather, loading, error, search } = useWeather()
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans">
+    <div className="min-h-screen font-sans" style={{
+      background: 'linear-gradient(135deg, #2d3561 0%, #4a3f6b 40%, #3d5a80 100%)',
+    }}>
       {/* Header */}
-      <header className="border-b border-zinc-100 bg-white">
+      <header style={{ background: 'rgba(0,0,0,0.15)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
-          <h1 className="text-xl font-bold tracking-tight text-zinc-900">Skycast</h1>
+          <h1 className="text-xl font-bold tracking-tight text-white">Skycast</h1>
           <SearchBar onSearch={search} loading={loading} />
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-6">
-        {error && (
-          <p className="text-sm text-red-500">{error}</p>
-        )}
+      <main className="max-w-4xl mx-auto px-6 py-8 space-y-4">
+        {error && <p className="text-sm text-red-300">{error}</p>}
 
         {!weather && !loading && !error && (
-          <div className="flex flex-col items-center justify-center py-32 text-zinc-400 space-y-2">
+          <div className="flex flex-col items-center justify-center py-32 space-y-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
             <span className="text-5xl">🌤</span>
             <p className="text-sm">Search for a city to get started</p>
           </div>
@@ -134,7 +137,7 @@ export default function App() {
 
         {loading && (
           <div className="flex justify-center py-32">
-            <div className="w-6 h-6 rounded-full border-2 border-zinc-300 border-t-zinc-800 animate-spin" />
+            <div className="w-6 h-6 rounded-full border-2 border-white/20 border-t-white animate-spin" />
           </div>
         )}
 
