@@ -20,7 +20,7 @@ export default function SearchBar({ onSearch, loading }: SearchBarProps) {
     <div className="flex gap-2 w-full max-w-md">
       <input
         type="text"
-        value={value}
+        value={value} 
         onChange={e => setValue(e.target.value)}
         onKeyDown={handleKey}
         placeholder="Search city..."
